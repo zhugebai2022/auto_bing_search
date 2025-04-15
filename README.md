@@ -1,5 +1,5 @@
 
-# AutoBing 🤖
+# Auto_Bing_Search 🤖
 
 一个基于Python和Selenium的Bing搜索自动化工具，用于模拟真实用户的搜索行为。通过随机选择关键词并控制间隔时间，帮助完成每日搜索任务或进行自动化测试。
 
@@ -24,8 +24,8 @@
 ### 安装步骤
 1. 克隆仓库
 ```bash
-git clone https://github.com/yourusername/autobing.git
-cd autobing
+git clone https://github.com/zhugebai2022/auto_bing_search.git
+cd auto_bing_search
 ```
 
 2. 安装依赖
@@ -54,7 +54,7 @@ time.sleep(random.uniform(300, 360))  # 修改间隔时间
 
 ### 运行程序
 ```bash
-python autobing.py
+python auto_bing_search.py
 ```
 程序结束后按回车键退出控制台
 
