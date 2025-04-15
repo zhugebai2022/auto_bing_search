@@ -64,13 +64,3 @@ python autobing.py
 3. 请遵守[Bing服务条款](https://www.microsoft.com/legal/terms-of-use)
 4. 建议搭配定时任务使用（如Windows任务计划程序）
 
-## 贡献指南 👥
-欢迎提交Issue或PR！建议步骤：
-1. Fork项目
-2. 创建特性分支（`git checkout -b feature/awesome`）
-3. 提交修改（`git commit -m 'Add awesome feature'`）
-4. 推送分支（`git push origin feature/awesome`）
-5. 发起Pull Request
-
-## 许可证 📄
-[MIT License](LICENSE)
