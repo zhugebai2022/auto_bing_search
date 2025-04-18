@@ -33,6 +33,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install selenium
         sudo apt-get install -y libnss3  # Chrome依赖库
+
+    - name: Validate Chrome
+      run: |
+        echo "Chrome版本: $(google-chrome --version)"
+        echo "ChromeDriver版本: $(chromedriver --version)" 
         
     - name: Run Bing automation
       run: |
