@@ -23,17 +23,15 @@ def run_search():
     try:
         for index, term in enumerate(search_terms):
                 
-            current_time = time.strftime("%H:%M:%S")
-            print(f"[{current_time}] 正在处理第 {index+1} 个搜索词: {term}")
+            current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            print(f"[{current_time}] 正在遍历第 {index + 1} 个搜索词: {term}")
             driver.get('https://cn.bing.com')
+            time.sleep(3)  # 每次打开必应页面后等待3秒
+            driver.refresh()  # 刷新页面
             search_box = driver.find_element(By.NAME, 'q')
             search_box.send_keys(term)
             search_box.submit()
-            
-            # 测试时等待时间改为5秒
-            wait_time = 5 if test_mode else random.uniform(300, 360)
-            print(f"[{current_time}] 等待 {wait_time} 秒...")
-            time.sleep(wait_time)
+            time.sleep(random.uniform(300, 360))
             sys.stdout.flush()  # 强制刷新日志
     finally:
         driver.quit()
@@ -55,7 +53,7 @@ def main():
         print(f"[{time.strftime('%H:%M:%S')}] 已选择搜索词: {search_terms[:3]}...")  # 显示前3个词
         
         # 测试时缩短等待时间
-        run_search(test_mode=True)  # 添加测试模式参数
+        run_search() 
         
     except Exception as e:
         print(f"[{time.strftime('%H:%M:%S')}] 致命错误: {str(e)}")
