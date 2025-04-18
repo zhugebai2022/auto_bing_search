@@ -9,12 +9,7 @@ from pathlib import Path
 with open('dict.txt', 'r', encoding='utf-8') as file:
     all_search_terms = [line.strip() for line in file]
 
-def run_search():
-    chrome_options = Options()
-    chrome_options.add_argument("--headless=new")  # 新增的无头模式参数
-    chrome_options.add_argument("--remote-allow-origins=*")  # 新增的允许远程连接参数
-
-    # 添加浏览器启动验证
+def run_search(search_terms, chrome_options):
     print(f"[{time.strftime('%H:%M:%S')}] 正在初始化浏览器驱动...")
     driver = webdriver.Chrome(options=chrome_options)
     print(f"[{time.strftime('%H:%M:%S')}] 浏览器已成功启动！")
@@ -49,10 +44,14 @@ def main():
         
         print(f"[{time.strftime('%H:%M:%S')}] 开始加载配置...")  # 添加时间戳
         search_terms = random.sample(all_search_terms, 40)
-        print(f"[{time.strftime('%H:%M:%S')}] 已选择搜索词: {search_terms[:3]}...")  # 显示前3个词
+        print(f"[{time.strftime('%H:%M:%S')}] 已选择搜索词: {search_terms}")
+
+        # 创建chrome配置
+        chrome_options = Options()
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--remote-allow-origins=*")
         
-        # 测试时缩短等待时间
-        run_search() 
+        run_search(search_terms, chrome_options)
         
     except Exception as e:
         print(f"[{time.strftime('%H:%M:%S')}] 致命错误: {str(e)}")
