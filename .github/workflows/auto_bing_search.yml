@@ -36,10 +36,25 @@ jobs:
         
     - name: Run Bing automation
       run: |
-        echo "当前工作目录: $(pwd)"
-        echo "文件列表:"
-        ls -la
-        python auto_bing_search.py
+        # 添加实时日志监控
+        echo "=== 开始执行 ==="
+        python autobing-非定时.py &
+        PID=$!
+    
+        # 每30秒检查一次日志
+        for i in {1..30}; do
+          sleep 30
+          echo "=== 第${i}次检查 ==="
+          if [ -f autobing-log.txt ]; then
+            tail -n 5 autobing-log.txt
+          else
+            echo "日志文件尚未生成"
+          fi
+          ps -p $PID > /dev/null || break
+        done
+    
+        # 等待进程结束
+        wait $PID
 
     - name: Upload log
       if: always()
