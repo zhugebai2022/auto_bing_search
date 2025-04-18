@@ -1,4 +1,4 @@
-name: AutoBing Search
+name: Auto Bing Search
 
 on:
   workflow_dispatch:
