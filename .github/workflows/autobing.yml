@@ -44,8 +44,6 @@ jobs:
         
     - name: Run Bing automation
       run: |
-        # 添加实时日志监控
-        echo "=== 开始执行 ==="
         python auto_bing_search.py
 
     - name: Upload log
