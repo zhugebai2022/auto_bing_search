@@ -28,6 +28,7 @@ jobs:
 
     - name: Install EdgeDriver
       run: |
+        sudo apt-get install jq -y
         LATEST_VERSION=$(curl -s https://edgeupdates.microsoft.com/api/products | jq -r '.[] | select(.Product == "msedge") | .Releases[0].Version')
         wget https://msedgedriver.azureedge.net/$LATEST_VERSION/edgedriver_linux64.zip
         unzip edgedriver_linux64.zip
@@ -44,7 +45,7 @@ jobs:
 
     - name: Upload log (optional)
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # 版本升级到v4
       with:
         name: console-log
         path: ${{ github.workspace }}/autobing-log.txt
