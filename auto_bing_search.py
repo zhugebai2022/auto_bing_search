@@ -22,9 +22,6 @@ def run_search():
     
     try:
         for index, term in enumerate(search_terms):
-            # 测试模式只运行3个词
-            if test_mode and index >= 3:
-                break
                 
             current_time = time.strftime("%H:%M:%S")
             print(f"[{current_time}] 正在处理第 {index+1} 个搜索词: {term}")
