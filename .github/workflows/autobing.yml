@@ -8,6 +8,7 @@ on:
 jobs:
   automate-bing:
     runs-on: ubuntu-latest
+    timeout-minutes: 40  # 添加超时限制
     
     steps:
     - name: Checkout code
