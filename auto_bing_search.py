@@ -9,6 +9,8 @@ with open('dict.txt', 'r', encoding='utf-8') as file:
 
 def run_search():
     edge_options = Options()
+    edge_options.add_argument("--headless=new")  # 新增的无头模式参数
+    edge_options.add_argument("--remote-allow-origins=*")  # 新增的允许远程连接参数
     edge_options.add_argument("--disable-extensions")
     edge_options.add_argument("--disable-gpu")
     edge_options.add_argument("--no-sandbox")
