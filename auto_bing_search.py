@@ -5,6 +5,7 @@ import random
 import time
 import sys
 from pathlib import Path
+import os
 
 with open('dict.txt', 'r', encoding='utf-8') as file:
     all_search_terms = [line.strip() for line in file]
@@ -57,6 +58,10 @@ def main():
         print(f"[{time.strftime('%H:%M:%S')}] 致命错误: {str(e)}")
         raise
 
+def is_ci_environment():
+    """检查是否在CI环境中运行"""
+    return os.environ.get('CI') or os.environ.get('GITHUB_ACTIONS')
+
 if __name__ == '__main__':
     print("程序开始运行...")
     try:
@@ -64,4 +69,6 @@ if __name__ == '__main__':
     except Exception as e:
         print(f"运行出错: {str(e)}")
     finally:
-        input("按回车键退出程序...")  # 防止程序立即关闭
+        if not is_ci_environment():
+            input("按回车键退出程序...")  # 仅在非CI环境下等待用户输入
+        print("=== 程序执行完毕 ===")
