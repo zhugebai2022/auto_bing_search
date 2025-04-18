@@ -1,9 +1,9 @@
-name: Auto_Bing_Search
+name: AutoBing Search
 
 on:
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch:
   #schedule:
-    #- cron: '0 0,12 * * *'  # 每天UTC时间0点和12点运行（对应北京时间8点和20点）
+    #- cron: '0 0,12 * * *'
 
 jobs:
   automate-bing:
@@ -18,34 +18,43 @@ jobs:
       with:
         python-version: '3.10'
 
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq unzip
+
     - name: Install Microsoft Edge
       run: |
-        curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+        curl -sSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
         sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
-        sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge.list'
-        sudo apt update
-        sudo apt install microsoft-edge-stable -y
+        echo "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main" | sudo tee /etc/apt/sources.list.d/microsoft-edge.list
+        sudo apt-get update
+        sudo apt-get install -y microsoft-edge-stable
 
     - name: Install EdgeDriver
       run: |
-        sudo apt-get install jq -y
-        LATEST_VERSION=$(curl -s https://edgeupdates.microsoft.com/api/products | jq -r '.[] | select(.Product == "msedge") | .Releases[0].Version')
-        wget https://msedgedriver.azureedge.net/$LATEST_VERSION/edgedriver_linux64.zip
+        EDGE_VERSION=$(microsoft-edge --version | awk '{print $3}')
+        DRIVER_VERSION=$(curl -s "https://msedgedriver.azureedge.net/LATEST_RELEASE_${EDGE_VERSION%%.*}" | tr -d '\n')
+        wget -q "https://msedgedriver.azureedge.net/$DRIVER_VERSION/edgedriver_linux64.zip"
         unzip edgedriver_linux64.zip
         sudo mv msedgedriver /usr/local/bin/
         sudo chmod +x /usr/local/bin/msedgedriver
 
-    - name: Install dependencies
+    - name: Install Python packages
       run: |
         python -m pip install --upgrade pip
-        pip install selenium msedge-selenium-tools
+        pip install selenium
 
     - name: Run Bing automation
-      run: python auto_bing_search.py
+      run: |
+        echo "当前工作目录: $(pwd)"
+        echo "文件列表:"
+        ls -la
+        python auto_bing_search.py
 
-    - name: Upload log (optional)
+    - name: Upload log
       if: always()
-      uses: actions/upload-artifact@v4  # 版本升级到v4
+      uses: actions/upload-artifact@v4
       with:
         name: console-log
-        path: ${{ github.workspace }}/autobing-log.txt
+        path: autobing-log.txt
