@@ -2,8 +2,8 @@ name: Auto_Bing_Search
 
 on:
   workflow_dispatch:  # 允许手动触发
-  schedule:
-    - cron: '0 0,12 * * *'  # 每天UTC时间0点和12点运行（对应北京时间8点和20点）
+  #schedule:
+    #- cron: '0 0,12 * * *'  # 每天UTC时间0点和12点运行（对应北京时间8点和20点）
 
 jobs:
   automate-bing:
