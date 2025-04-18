@@ -33,7 +33,7 @@ jobs:
 
     - name: Install EdgeDriver
       run: |
-        EDGE_VERSION=$(microsoft-edge --version | awk '{print $3}')
+        EDGE_VERSION=$(microsoft-edge --version | tr -d '\0' | awk '{print $3}')
         DRIVER_VERSION=$(curl -s "https://msedgedriver.azureedge.net/LATEST_RELEASE_${EDGE_VERSION%%.*}" | tr -d '\n')
         wget -q "https://msedgedriver.azureedge.net/$DRIVER_VERSION/edgedriver_linux64.zip"
         unzip edgedriver_linux64.zip
