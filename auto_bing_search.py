@@ -13,41 +13,56 @@ def run_search():
     edge_options = Options()
     edge_options.add_argument("--headless=new")  # 新增的无头模式参数
     edge_options.add_argument("--remote-allow-origins=*")  # 新增的允许远程连接参数
-    edge_options.add_argument("--disable-extensions")
-    edge_options.add_argument("--disable-gpu")
-    edge_options.add_argument("--no-sandbox")
-    edge_options.add_argument("--disable-dev-shm-usage")
-    edge_options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    edge_options.add_argument('--log-level=3')
-    
-    driver = webdriver.Edge(options=edge_options)
-    time.sleep(3)
     driver.refresh()
+
+    # 添加浏览器启动验证
+    print(f"[{time.strftime('%H:%M:%S')}] 正在初始化浏览器驱动...")
+    driver = webdriver.Chrome(options=chrome_options)
+    print(f"[{time.strftime('%H:%M:%S')}] 浏览器已成功启动！")
     
     try:
         for index, term in enumerate(search_terms):
-            current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-            print(f"[{current_time}] 正在遍历第 {index + 1} 个搜索词: {term}")
+            # 测试模式只运行3个词
+            if test_mode and index >= 3:
+                break
+                
+            current_time = time.strftime("%H:%M:%S")
+            print(f"[{current_time}] 正在处理第 {index+1} 个搜索词: {term}")
             driver.get('https://cn.bing.com')
-            time.sleep(3)  # 每次打开必应页面后等待3秒
-            driver.refresh()  # 刷新页面
             search_box = driver.find_element(By.NAME, 'q')
             search_box.send_keys(term)
             search_box.submit()
-            time.sleep(random.uniform(300, 360))
+            
+            # 测试时等待时间改为5秒
+            wait_time = 5 if test_mode else random.uniform(300, 360)
+            print(f"[{current_time}] 等待 {wait_time} 秒...")
+            time.sleep(wait_time)
+            sys.stdout.flush()  # 强制刷新日志
     finally:
         driver.quit()
 
 def main():
-    log_path = Path(__file__).parent / "autobing-log.txt"
-    sys.stdout = open(log_path, 'w', encoding='utf-8')
-    sys.stderr = sys.stdout
-    sys.stdout = open('autobing-log.txt', 'w', encoding='utf-8')
-    sys.stderr = sys.stdout
-    global search_terms
-    search_terms = random.sample(all_search_terms, 40)
-    print(f"本次搜索词: {search_terms}")
-    run_search()
+    try:
+        # 强制初始化日志（添加时间戳验证）
+        init_time = time.strftime("%Y-%m-%d %H:%M:%S")
+        with open('autobing-log.txt', 'w', encoding='utf-8') as f:
+            f.write(f"=== 程序启动于 {init_time} ===\n")
+            f.flush()
+        
+        # 添加实时心跳日志
+        sys.stdout = open('autobing-log.txt', 'a', encoding='utf-8')
+        sys.stderr = sys.stdout
+        
+        print(f"[{time.strftime('%H:%M:%S')}] 开始加载配置...")  # 添加时间戳
+        search_terms = random.sample(all_search_terms, 40)
+        print(f"[{time.strftime('%H:%M:%S')}] 已选择搜索词: {search_terms[:3]}...")  # 显示前3个词
+        
+        # 测试时缩短等待时间
+        run_search(test_mode=True)  # 添加测试模式参数
+        
+    except Exception as e:
+        print(f"[{time.strftime('%H:%M:%S')}] 致命错误: {str(e)}")
+        raise
 
 if __name__ == '__main__':
     print("程序开始运行...")
