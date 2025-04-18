@@ -13,7 +13,6 @@ def run_search():
     edge_options = Options()
     edge_options.add_argument("--headless=new")  # 新增的无头模式参数
     edge_options.add_argument("--remote-allow-origins=*")  # 新增的允许远程连接参数
-    driver.refresh()
 
     # 添加浏览器启动验证
     print(f"[{time.strftime('%H:%M:%S')}] 正在初始化浏览器驱动...")
