@@ -1,0 +1,72 @@
+name: AutoBing Search
+
+on:
+  workflow_dispatch:
+  #schedule:
+    #- cron: '0 0,12 * * *'
+
+jobs:
+  automate-bing:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+          
+      - name: Setup ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install selenium
+        sudo apt-get install -y libnss3  # Chrome依赖库
+
+    - name: Validate Chrome
+      run: |
+        echo "Chrome版本: $(google-chrome --version)"
+        echo "ChromeDriver版本: $(chromedriver --version)" 
+        
+    - name: Run Bing automation
+      run: |
+        # 添加实时日志监控
+        echo "=== 开始执行 ==="
+        python auto_bing_search.py &
+        PID=$!
+    
+        # 每30秒检查一次日志
+        for i in {1..30}; do
+          sleep 30
+          echo "=== 第${i}次检查 ==="
+          if [ -f autobing-log.txt ]; then
+            tail -n 5 autobing-log.txt
+          else
+            echo "日志文件尚未生成"
+          fi
+          ps -p $PID > /dev/null || break
+        done
+    
+        # 等待进程结束
+        wait $PID
+
+    - name: Upload log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: console-log
+        path: autobing-log.txt
