@@ -4,6 +4,7 @@ from selenium.webdriver.edge.options import Options
 import random
 import time
 import sys
+from pathlib import Path
 
 with open('dict.txt', 'r', encoding='utf-8') as file:
     all_search_terms = [line.strip() for line in file]
@@ -38,6 +39,9 @@ def run_search():
         driver.quit()
 
 def main():
+    log_path = Path(__file__).parent / "autobing-log.txt"
+    sys.stdout = open(log_path, 'w', encoding='utf-8')
+    sys.stderr = sys.stdout
     sys.stdout = open('autobing-log.txt', 'w', encoding='utf-8')
     sys.stderr = sys.stdout
     global search_terms
