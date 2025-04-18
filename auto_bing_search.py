@@ -1,6 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.edge.options import Options
+from selenium.webdriver.chrome.options import Options
 import random
 import time
 import sys
@@ -10,9 +10,9 @@ with open('dict.txt', 'r', encoding='utf-8') as file:
     all_search_terms = [line.strip() for line in file]
 
 def run_search():
-    edge_options = Options()
-    edge_options.add_argument("--headless=new")  # 新增的无头模式参数
-    edge_options.add_argument("--remote-allow-origins=*")  # 新增的允许远程连接参数
+    chrome_options = Options()
+    chrome_options.add_argument("--headless=new")  # 新增的无头模式参数
+    chrome_options.add_argument("--remote-allow-origins=*")  # 新增的允许远程连接参数
 
     # 添加浏览器启动验证
     print(f"[{time.strftime('%H:%M:%S')}] 正在初始化浏览器驱动...")
