@@ -55,7 +55,7 @@ def main():
         sys.stderr = sys.stdout
         
         print(f"[{time.strftime('%H:%M:%S')}] 开始加载配置...")  # 添加时间戳
-        search_terms = random.sample(all_search_terms, 40)
+        search_terms = random.sample(all_search_terms, 1)
         print(f"[{time.strftime('%H:%M:%S')}] 已选择搜索词: {search_terms}")
 
         # 创建chrome配置
