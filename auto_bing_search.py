@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.edge.options import Options
 import random
 import time
+import sys
 
 with open('dict.txt', 'r', encoding='utf-8') as file:
     all_search_terms = [line.strip() for line in file]
@@ -37,6 +38,8 @@ def run_search():
         driver.quit()
 
 def main():
+    sys.stdout = open('autobing-log.txt', 'w', encoding='utf-8')
+    sys.stderr = sys.stdout
     global search_terms
     search_terms = random.sample(all_search_terms, 40)
     print(f"本次搜索词: {search_terms}")
