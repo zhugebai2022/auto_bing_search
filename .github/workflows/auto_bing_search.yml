@@ -33,10 +33,22 @@ jobs:
 
     - name: Install EdgeDriver
       run: |
-        EDGE_VERSION=$(microsoft-edge --version | tr -d '\0' | awk '{print $3}')
-        DRIVER_VERSION=$(curl -s "https://msedgedriver.azureedge.net/LATEST_RELEASE_${EDGE_VERSION%%.*}" | tr -d '\n')
+        # 获取Edge浏览器版本（修复空字节问题）
+        EDGE_FULL_VERSION=$(/usr/bin/microsoft-edge --version 2>&1 | tr -d '\0')
+        EDGE_VERSION=$(echo "$EDGE_FULL_VERSION" | awk '{match($0, /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/); print substr($0, RSTART, RLENGTH)}')
+        echo "提取的Edge版本号: $EDGE_VERSION"
+    
+        # 获取主版本号（如123）
+        EDGE_MAJOR_VERSION=$(echo "$EDGE_VERSION" | cut -d. -f1)
+        echo "主版本号: $EDGE_MAJOR_VERSION"
+    
+        # 获取对应Driver版本
+        DRIVER_VERSION=$(curl -s "https://msedgedriver.azureedge.net/LATEST_RELEASE_$EDGE_MAJOR_VERSION")
+        echo "匹配的Driver版本: $DRIVER_VERSION"
+    
+        # 下载并安装
         wget -q "https://msedgedriver.azureedge.net/$DRIVER_VERSION/edgedriver_linux64.zip"
-        unzip edgedriver_linux64.zip
+        unzip -o edgedriver_linux64.zip
         sudo mv msedgedriver /usr/local/bin/
         sudo chmod +x /usr/local/bin/msedgedriver
 
